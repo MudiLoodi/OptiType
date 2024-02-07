@@ -11,17 +11,17 @@ calibration_points = [(100, 100), (300, 100), (500, 100)]  # Example calibration
 current_calibration_point = 0
 calibration_data = []
 
+def midpoint(p1, p2):
+    return int((p1.x + p2.x)/2), int((p1.y + p2.y)/2)
+
 def detect_pupil(vid):
     gray_image = cv2.cvtColor(vid, cv2.COLOR_BGR2GRAY)
     faces = face_detector(gray_image)
 
     for face in faces:
         landmarks = landmark_predictor(gray_image, face)
-        x = landmarks.part(36).x
-        y = landmarks.part(36).y
-        # Calculate gaze point as the midpoint of the pupils
-        circle = cv2.circle(vid, (x, y), 3, (0, 0, 255), 2)
-        return circle
+        left_point = (landmarks.part(36).x, landmarks.part(36).y)
+        right_point = (landmarks.part(39).x, landmarks.part(39).y)
 
 # Main loop for eye tracking using calibration mapping
 while True:
